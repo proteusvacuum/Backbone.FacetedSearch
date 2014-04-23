@@ -16,9 +16,16 @@ Backbone.FacetedSearchCollection = Backbone.Collection.extend({
 
 	wholeCollection: {},
 
-	initializeFilters: function() {
+	options:{},
+
+	initializeFilters: function(options) {
 		var self = this;
 		
+		if (options){
+			this.options = options;
+		}
+		_.defaults(this.options, {silent:false});
+
 		this.wholeCollection = this.clone();
 		
 		if (this.filterFacets.length !== 0) {
@@ -32,19 +39,49 @@ Backbone.FacetedSearchCollection = Backbone.Collection.extend({
 
 	addFilter: function(query) {
 		this.filters.push(query);
-		return this.filterAll();
+		var returnedModels = this.filterAll();
+		this.trigger("filter");
+		return returnedModels;
 	},
 
 	removeFilter: function(query) {
 		this.filters = _.reject(this.filters, function(filter) {
 			return _.isEqual(filter, query);
 		});
-		return this.filterAll();
+		var returnedModels = this.filterAll();
+		this.trigger("filter");
+		return returnedModels;
+	},
+
+	overWriteFilter: function(query){
+		this.filters = _.reject(this.filters, function(filter) {
+			return Object.keys(filter)[0] == Object.keys(query)[0];
+		});
+		this.filters.push(query);
+		var returnedModels = this.filterAll();
+		this.trigger("filter");
+		return returnedModels;
+	},
+
+	resetAndAddFilter: function(query) {
+		this.filters = [];
+		this.filters.push(query);
+		var returnedModels = this.filterAll();
+		this.trigger("filter");
+		return returnedModels;
 	},
 
 	resetFilters: function() {
-		this.filters = [];
-		return this.filterAll();
+		var returnedModels;
+		if (this.filters.length > 0){
+			this.filters = [];
+			returnedModels = this.reset(this.wholeCollection.models, {silent: this.options.silent});
+			this.trigger("filter");
+		}
+		else{
+			returnedModels = this.models;
+		}
+		return returnedModels;
 	},
 
 	filterAll: function() {
@@ -52,7 +89,7 @@ Backbone.FacetedSearchCollection = Backbone.Collection.extend({
 		grouped = _.groupBy(this.filters, function(filter) {
 			return Object.keys(filter);
 		});
-		return this.reset(this.filterGrouped(grouped));
+		return this.reset(this.filterGrouped(grouped), {silent: this.options.silent});
 	},
 
 	skipFilter: function(facet) {
