@@ -1,59 +1,71 @@
-Backbone.FacetedSearch
-======================
+#Backbone.FacetedSearch
+----------
 
 A Backbone.JS plugin for making your collections easily filterable by any key:value pair.
 
-Usage
------------
 
-1. Include Backbone.FacetedSearch.js in your project, after Backbone.js
-2. Make your collection facet-searchable:
-  ```
-  class your_collection = Backbone.FacetedSearchCollection.extend({})
-  ```
+##Setup
 
-3. When you populate your collection, call
+*  Include Backbone.FacetedSearch.js in your project, after Backbone.js
+
+*  Make your collection facet-searchable:
+```js
+your_collection = Backbone.FacetedSearchCollection.extend({
+    // Add "facets" (keys) to make filterable
+    filterFacets: ['key0', 'key1', 'key2'];
+  });
+```
+
+*  When you populate your collection, call
   `your_collection.initializeFilters()`
 
-  After calling initializeFilters(), you will see a new wholeCollection object in your collection
+*  After calling initializeFilters(), you will see a new wholeCollection object in your collection
   which, as you guessed, is your whole collection.
 
-4. Filter Something!
+##Filtering
 
-  Filters are just key: value pairs from your model's attributes hash.
-  ```
-  your_collection.addFilter({facet: value})
-  ```
-  or 
-  ```
-  your_collection.resetAndAddFilter({facet: value})
-  ```
+*  Filters are based on key: value pairs from your models.
+  They allow you to select matching models from your collection, and return a filtered collection containing only those models.
 
-  When you do addFilter() your collection will trigger a "change" event
+*  You can add or remove them one at a time:
+  ```
+  your_collection.addFilter({facet: value});
+  your_collection.removeFilter({whichever: "you want"});
+  ```
+*  Reset and add one (for a single position switch/toggle behaviour)
+  ```
+  your_collection.resetAndAddFilter({facet: value});
+  ```
+*  Reset all, and return the whole collection:
+  ```
+  your_collection.resetFilters();
+  ```
+*  When you do addFilter() your collection will trigger a "change" event
   which means that your view will automatically re-render.
 
   If you don't want that to happen, you can call
-  `your_collection.initializeFilters({silent:true})`
+  `your_collection.initializeFilters({silent:true});`
   in that case, there will be a "filter" event that is triggered on the collection.
 
-5. Removing filters is as easy as you'd expect:
-    ```
-    your_collection.removeFilter({whichever: "you want"});
-    your_collection.resetFilters();
-    ```  
-6. For a list of potential values, separated by facet:
+
+
+##Filter Lists
+*  For a list of potential values, separated by facet:
 
   ```
-    your_collection.getFilterLists()
+    your_collection.getFilterLists();
   ```
-  When you add or remove a filter on a particular facet, you can call:
+*  When you add or remove a filter on a particular facet, you can call:
   ```
-    your_collection.getUpdatedFilterLists(facet)
+    your_collection.getUpdatedFilterLists(facet);
   ```
   which will return a list of all the remaining possible filters for all the other facets.
+  This is extremely useful when trying to keep select boxes, etc. up to date. 
 
-License
--------
+
+
+##License
+
 The MIT License (MIT)
 
 Copyright (c) 2014 Farid Rener
