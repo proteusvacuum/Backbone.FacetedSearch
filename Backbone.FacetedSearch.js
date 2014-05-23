@@ -7,7 +7,7 @@
 // http://github.com/proteusvacuum/Backbone.FacetedSearch
 
 Backbone.FacetedSearchCollection = Backbone.Collection.extend({
-	
+
 	filterFacets: [],
 
 	filters: [],
@@ -20,18 +20,20 @@ Backbone.FacetedSearchCollection = Backbone.Collection.extend({
 
 	initializeFilters: function(options) {
 		var self = this;
-		
+
 		if (options){
 			this.options = options;
 		}
 		_.defaults(this.options, {silent:false});
 
-		this.wholeCollection = this.clone();
-		
+
+
 		if (this.filterFacets.length !== 0) {
 			this.initializeFilterLists();
 		}
-		
+
+		this.wholeCollection = this.clone();
+
 		this.on("change", function() {
 			self.wholeCollection.add(this.models, { merge: true });
 		});
