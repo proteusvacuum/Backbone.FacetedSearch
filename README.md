@@ -3,24 +3,31 @@ Backbone.FacetedSearch
 
 A Backbone.JS plugin for making your collections easily filterable by any key:value pair.
 
-Basic Usage
+Usage
 -----------
 
 1. Include Backbone.FacetedSearch.js in your project, after Backbone.js
 2. Make your collection facet-searchable:
-
-  `class your_collection extends Backbone.FacetedSearchCollection`
+  ```
+  class your_collection = Backbone.FacetedSearchCollection.extend({})
+  ```
 
 3. When you populate your collection, call
   `your_collection.initializeFilters()`
 
+  After calling initializeFilters(), you will see a new wholeCollection object in your collection
+  which, as you guessed, is your whole collection.
+
 4. Filter Something!
 
   Filters are just key: value pairs from your model's attributes hash.
-
-  `{attribute_name : "Attribute Value"}`
-
-  `your_collection.addFilter({facet: value})`
+  ```
+  your_collection.addFilter({facet: value})
+  ```
+  or 
+  ```
+  your_collection.resetAndAddFilter({facet: value})
+  ```
 
   When you do addFilter() your collection will trigger a "change" event
   which means that your view will automatically re-render.
@@ -28,42 +35,43 @@ Basic Usage
   If you don't want that to happen, you can call
   `your_collection.initializeFilters({silent:true})`
   in that case, there will be a "filter" event that is triggered on the collection.
-  which you can then listen to
 
 5. Removing filters is as easy as you'd expect:
     ```
-    your_collection.removeFilter({whichever: "you want"})
-    your_collection.resetFilters()
-
+    your_collection.removeFilter({whichever: "you want"});
+    your_collection.resetFilters();
     ```  
+6. For a list of potential values, separated by facet:
 
-Advanced Usage
---------------
+  ```
+    your_collection.getFilterLists()
+  ```
+  When you add or remove a filter on a particular facet, you can call:
+  ```
+    your_collection.getUpdatedFilterLists(facet)
+  ```
+  which will return a list of all the remaining possible filters for all the other facets.
 
-you can pass options when you initializeFilters()
-when you do addFilter() your collection will trigger a "change" event
-which means that your view will automatically re-render
-if you don't want that to happen
-your_collection.initializeFilters({silent:true})
-in that case, there will be a "filter" event that is triggered on the collection.
-which you can then listen to to do other stuff
+License
+-------
+The MIT License (MIT)
 
-there is also removeFilter()
-which does what you think it does
+Copyright (c) 2014 Farid Rener
 
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-and resetFilters()
-and resetAndAddFilter()
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-after calling initializeFilters(), you will see a new wholeCollection object in your collection
-which, as you guessed, is your wholeCollection
-
-
-getUpdatedFilterLists(skippedFilter)
-
-if, when making your collection you pass in an array of facets
-filterFacets: ["artist_name", "album_name"]
-then, if you call getUpdatedFilterLists("artist_name") when you addFilter on artist name
-it will return a list of possible entries for all the other facets
-if you call getFilterLists() it gives you a list of everything
-you can use this to populate your possible lists of things
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
