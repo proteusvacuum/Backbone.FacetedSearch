@@ -26,11 +26,13 @@ Backbone.FacetedSearchCollection = Backbone.Collection.extend({
 		}
 		_.defaults(this.options, {silent:false});
 
+		if (this.wholeCollection.length !== 0) {
+			this.wholeCollection = this.clone();
+		}
+
 		if (this.filterFacets.length !== 0) {
 			this.initializeFilterLists();
 		}
-
-		this.wholeCollection = this.clone();
 
 		this.on("change", function() {
 			self.wholeCollection.add(this.models, { merge: true });
