@@ -57,6 +57,16 @@ Backbone.FacetedSearchCollection = Backbone.Collection.extend({
 		return returnedModels;
 	},
 
+	addFilters: function(filterArray) {
+		self = this;
+		_.each(filterArray, function(filter) {
+			self.filters.push(filter);
+		});
+		var returnedModels = this.filterAll();
+		this.trigger("filter");
+		return returnedModels;
+	},
+
 	removeFilter: function(query) {
 		this.filters = _.reject(this.filters, function(filter) {
 			return _.isEqual(filter, query);

@@ -28,17 +28,34 @@ your_collection = Backbone.FacetedSearchCollection.extend({
   They allow you to select matching models from your collection, and return a filtered collection containing only those models.
 
 *  You can add or remove them one at a time:
+
   ```js
   your_collection.addFilter({facet: "value"});
   your_collection.removeFilter({whichever: "you want"});
   ```
+
+*  Add an array of facet value pairs at once:
+
+```js
+  var filterArray = [
+    {facet: "value"},
+    {facet: "other value"},
+    {facet: "third, different value"}
+  ];
+  your_collection.addFilters(filterArray);
+```
+
 *  Reset and add one (for a single position switch/toggle behaviour)
+
   ```js
   your_collection.resetAndAddFilter({facet: "value"});
+
   ```
 *  Reset all, and return the whole collection:
+
   ```js
   your_collection.resetFilters();
+
   ```
 *  When you do addFilter() your collection will trigger a "change" event
   which means that your view will automatically re-render.
