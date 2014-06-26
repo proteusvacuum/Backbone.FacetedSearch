@@ -7,31 +7,44 @@
 // http://github.com/proteusvacuum/Backbone.FacetedSearch
 
 Backbone.FacetedSearchCollection = Backbone.Collection.extend({
-	
-	filterFacets: [],
 
-	filters: [],
+	options : {},
 
-	filterLists: {},
+	constructor: function() {
+		if (!this.filterFacets) {
 
-	wholeCollection: {},
+			this.filterFacets = [];
 
-	options:{},
+		} else {
+
+			this.filterFacets = this.filterFacets;
+		}
+
+		this.filters = [];
+
+		this.filterLists = {};
+
+		if (!this.wholeCollection) {
+
+			this.wholeCollection = {};
+		}
+		Backbone.Collection.apply(this, arguments);
+	},
 
 	initializeFilters: function(options) {
 		var self = this;
-		
+
 		if (options){
 			this.options = options;
 		}
 		_.defaults(this.options, {silent:false});
 
 		this.wholeCollection = this.clone();
-		
+
 		if (this.filterFacets.length !== 0) {
 			this.initializeFilterLists();
 		}
-		
+
 		this.on("change", function() {
 			self.wholeCollection.add(this.models, { merge: true });
 		});
@@ -148,7 +161,9 @@ Backbone.FacetedSearchCollection = Backbone.Collection.extend({
 		var self = this;
 
 		_.each(this.filterFacets, function(facet) {
-			self.filterLists[facet] = self.makeFilterList(facet, self);
+
+				self.filterLists[facet] = self.makeFilterList(facet, self);
+
 		});
 
 		return this.filterLists;
